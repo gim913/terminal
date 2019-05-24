@@ -28,7 +28,6 @@
 #include "..\..\host\tracing.hpp"
 
 #include "..\..\renderer\base\renderer.hpp"
-#include "..\..\renderer\gdi\gdirenderer.hpp"
 #include "..\..\renderer\dx\DxRenderer.hpp"
 
 #include "..\inc\ServiceLocator.hpp"
