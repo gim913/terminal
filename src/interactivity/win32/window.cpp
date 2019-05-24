@@ -212,27 +212,17 @@ NTSTATUS Window::_MakeWindow(_In_ Settings* const pSettings,
     // Ensure we have appropriate system metrics before we start constructing the window.
     _UpdateSystemMetrics();
 
-    const bool useDx = pSettings->GetUseDx();
-    GdiEngine* pGdiEngine = nullptr;
     DxEngine* pDxEngine = nullptr;
     try
     {
-        if (useDx)
-        {
-            pDxEngine = new DxEngine();
-            // TODO: MSFT:21255595 make this less gross
-            // Manually set the Dx Engine to Hwnd mode. When we're trying to
-            // determine the initial window size, which happens BEFORE the
-            // window is created, we'll want to make sure the DX engine does
-            // math in the hwnd mode, not the Composition mode.
-            THROW_IF_FAILED(pDxEngine->SetHwnd(0));
-            g.pRender->AddRenderEngine(pDxEngine);
-        }
-        else
-        {
-            pGdiEngine = new GdiEngine();
-            g.pRender->AddRenderEngine(pGdiEngine);
-        }
+        pDxEngine = new DxEngine();
+        // TODO: MSFT:21255595 make this less gross
+        // Manually set the Dx Engine to Hwnd mode. When we're trying to
+        // determine the initial window size, which happens BEFORE the
+        // window is created, we'll want to make sure the DX engine does
+        // math in the hwnd mode, not the Composition mode.
+        THROW_IF_FAILED(pDxEngine->SetHwnd(0));
+        g.pRender->AddRenderEngine(pDxEngine);
     }
     catch (...)
     {
@@ -316,18 +306,11 @@ NTSTATUS Window::_MakeWindow(_In_ Settings* const pSettings,
         {
             _hWnd = hWnd;
 
-            if (useDx)
-            {
-                status = NTSTATUS_FROM_HRESULT(pDxEngine->SetHwnd(hWnd));
+            status = NTSTATUS_FROM_HRESULT(pDxEngine->SetHwnd(hWnd));
 
-                if (NT_SUCCESS(status))
-                {
-                    status = NTSTATUS_FROM_HRESULT(pDxEngine->Enable());
-                }
-            }
-            else
+            if (NT_SUCCESS(status))
             {
-                status = NTSTATUS_FROM_HRESULT(pGdiEngine->SetHwnd(hWnd));
+                status = NTSTATUS_FROM_HRESULT(pDxEngine->Enable());
             }
 
             if (NT_SUCCESS(status))

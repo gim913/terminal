@@ -182,7 +182,6 @@ public:
     bool IsTerminalScrolling() const noexcept;
     void SetTerminalScrolling(const bool terminalScrollingEnabled) noexcept;
 
-    bool GetUseDx() const noexcept;
     bool GetCopyColor() const noexcept;
 
     COLORREF CalculateDefaultForeground() const noexcept;
@@ -231,7 +230,6 @@ private:
     DWORD _dwVirtTermLevel;
     bool _fAutoReturnOnNewline;
     bool _fRenderGridWorldwide;
-    bool _fUseDx;
     bool _fCopyColor;
 
     COLORREF _XtermColorTable[XTERM_COLOR_TABLE_SIZE];
